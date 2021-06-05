@@ -117,11 +117,19 @@
   width: 100%;
   outline: none;
 }
-.error {
-  color: red;
+.message {
   font-size: 18px;
   min-height: 21px;
   margin: 24px 0px;
+}
+.error {
+  color: red;
+}
+.success {
+  color: #54C147;
+}
+.success a {
+  text-decoration: underline;
 }
 .button {
   cursor: pointer;

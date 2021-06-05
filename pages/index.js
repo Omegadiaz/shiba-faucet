@@ -8,15 +8,17 @@ import web3Utils from 'web3-utils';
 
 export default function Home() {
   const [session] = useSession();
-  const [address, setAddress] = useState("");
-  const [error, setError] = useState("");
+  const [address, setAddress] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [transactionHash, setTransactionHash] = useState('');
   const recaptchaRef = createRef();
 
   const handleAddress = (e) => {
     if(loading) return;
     setAddress(e.target.value);
     setError('');
+    setTransactionHash('');
   }
 
   const handleSubmit = () => {
@@ -34,6 +36,7 @@ export default function Home() {
 
     setLoading(true);
     setError('');
+    setTransactionHash('');
 
     recaptchaRef.current.execute();
   };
@@ -56,10 +59,18 @@ export default function Home() {
         body: JSON.stringify({ address }),
       });
      
+      if(!res.ok){
+        const errorResData = await res.json();
+        throw new Error(errorResData.message);
+      }
+  
       const data = await res.json();
-      console.log('pages | onReCAPTCHAChange', data);
+      if(data && data.transactionHash){
+        setTransactionHash(data.transactionHash);
+      }
+      
     } catch (error) {
-      console.log('pages | onReCAPTCHAChange error', error.message);
+      setError(error.message);
     } 
     setLoading(false);
   }
@@ -79,7 +90,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
-            alt=""
+            alt=''
             src="/shib_logo_header.png"
             width="30"
             height="30"
@@ -125,9 +136,17 @@ export default function Home() {
             value={address}
             onChange={handleAddress}
           />
-          <p className={styles.error}>
-            {error}
-          </p>
+          <div className={styles.message}>
+            {error ? (
+              <div className={styles.error}>
+                {error}
+              </div>
+            ) : transactionHash ? (
+               <div className={styles.success}>
+                 Your request was successful! View your transaction <a href={`https://kovan.etherscan.io/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">here</a>.
+               </div> 
+            ) : null}
+          </div>
         </div>
         <button className={styles.button} onClick={handleSubmit}>
           {loading ? (
