@@ -56,7 +56,7 @@ export default async function handler(req, res) {
       .limit(1)
       .toArray();
 
-    console.log('TRANSACTIONS DB', transactions)
+    // console.log('TRANSACTIONS DB', transactions)
     // Check if the user has already been given funds in the last 24 hours
     if (transactions.length > 0) {
       const currentDate = new Date();
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
 
     web3js.eth.getTransactionCount(FROM_ADDRESS)
       .then(function (v) {
-        console.log("Count: " + v);
+        // console.log("Count: " + v);
         const count = v;
 
         // Transfer 100m SHIB
@@ -103,14 +103,13 @@ export default async function handler(req, res) {
         web3js.eth.sendSignedTransaction('0x' + signedTx.serialize().toString('hex'))
           .on('transactionHash', function (transactionHash) {
             // Insert the new transaction into the DB
-            console.log('requestTokens.js | sentSignedTx', transactionHash);
             db.collection('transactions').insertOne({ address, transactionHash }, function (error, response) {
               if (error) {
                 console.log('requestTokens.js | Error', 'Could not save to DB');
               } else {
                 console.log('requestTokens.js | Inserted', response.ops[0]);
-                res.status(200).json({ address, transactionHash });
               }
+              res.status(200).json({ address, transactionHash });
             });
           });
 
