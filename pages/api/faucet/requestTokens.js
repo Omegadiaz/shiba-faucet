@@ -1,9 +1,12 @@
-const web3 = require('web3');
-const Common = require('@ethereumjs/common').default;
-const { Transaction } = require('@ethereumjs/tx');
+import web3 from 'web3';
+import Common from '@ethereumjs/common';
+import { Transaction } from '@ethereumjs/tx';
+import { connectToDatabase } from '../../../utils/mongodb';
+import { ObjectId } from 'mongodb';
+import contract from '../../../utils/contract';
+import rateLimit from '../../../utils/rateLimit';
 
 // SHIB contract
-const contract = require('../../../utils/contract');
 const { abi: CONTRACT_ABI, address: CONTRACT_ADDRESS } = contract;
 
 // Infura HttpProvider Endpoint
@@ -17,6 +20,32 @@ export default async function handler(req, res) {
   try {
     const { body: { address }, method } = req;
     if (method === "POST") {
+      await rateLimit(req, res);
+
+      const { db } = await connectToDatabase()
+
+      const funds = await db
+        .collection("funds")
+        .find({ address })
+        .sort({ created_at: -1 })
+        .limit(1)
+        .toArray();
+
+
+      if (funds.length > 0) {
+        const currentDate = new Date();
+        const oneDay = 60 * 60 * 24;
+        const createdAt = ObjectId(funds[0]._id).getTimestamp();
+        if ((currentDate - createdAt) > oneDay) {
+          return res.status(403).json({
+            message: "Funds already given to address. Wait 24hrs"
+          });
+        }
+      }
+
+      await db.collection("funds").insertOne({ address, transactionHash: 'blabla' });
+      return res.status(200).json({ funds, address, transactionHash: 'bkabka' });
+
       console.log('requestTokens.js | requesting to address', address);
       const contract = new web3js.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
@@ -45,19 +74,27 @@ export default async function handler(req, res) {
         const serializedTx = signedTx.serialize();
 
         web3js.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
-          .on('transactionHash', console.log);
+          .on('transactionHash', function (transactionHash) {
+            db.funds.insert({ address, transactionHash });
+            res.status(200).json({ address, transactionHash });
+          });
 
         contract.methods.balanceOf(FROM_ADDRESS).call()
-          .then(function (balance) { console.log(balance) });
+          .then(function (balance) {
+            console.log('requestTokens.js | New balance', balance);
+          });
 
-        res.status(200).json({ address: `Address ${address}`, success: true })
-      })
+      });
     } else {
       res.setHeader('Allow', ['POST'])
       res.status(405).end(`Method ${method} Not Allowed`)
     }
   } catch (error) {
     console.log('requestTokens.js | handler error', error.message);
-    res.status(500).json('There was an error while requesting your SHIB');
+    res.status(500).json({
+      message: process.env.NODE_ENV === "production"
+        ? "There was an error while requesting your SHIB"
+        : error.message
+    });
   }
 }
