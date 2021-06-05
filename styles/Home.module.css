@@ -6,6 +6,52 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url("/bg.png");
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  color: white;
+}
+
+.navbar { 
+  width: 100%;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+}
+.navbar a {
+  color: #fda32b;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.auth {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  color: gainsboro;
+  cursor: pointer;
+}
+.authButton {
+  display: flex;
+  flex-direction: row;
+  -webkit-box-align: center;
+  align-items: center;
+  background-color: rgb(44, 47, 54);
+  border-radius: 12px;
+  white-space: nowrap;
+  padding: 6px 12px;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease, -webkit-transform 0.1s ease, transform 0.1s ease;
+  -moz-transition: all 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease, -ms-transform 0.1s ease, -webkit-transform 0.1s ease, transform 0.1s ease;
+}
+.authButton:hover {
+  background-color: rgb(48, 52, 59);
 }
 
 .main {
@@ -20,7 +66,6 @@
 .footer {
   width: 100%;
   height: 100px;
-  border-top: 1px solid #eaeaea;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,23 +76,17 @@
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  color: gainsboro;
+  text-shadow: 2px 3px 0 black;
 }
-
-.title a {
-  color: #0070f3;
-  text-decoration: none;
+.title span {
+  color: white;
 }
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
-}
-
 .title {
   margin: 0;
   line-height: 1.15;
   font-size: 4rem;
+  color: #fda32b;
 }
 
 .title,
@@ -59,63 +98,92 @@
   line-height: 1.5;
   font-size: 1.5rem;
 }
-
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin-top: 3rem;
-}
-
-.card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  width: 45%;
-}
-
-.card:hover,
-.card:focus,
-.card:active {
-  color: #0070f3;
-  border-color: #0070f3;
-}
-
-.card h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-}
-
-.card p {
-  margin: 0;
-  font-size: 1.25rem;
+.disclaimer {
   line-height: 1.5;
+  font-size: 0.9rem;
+  font-style: italic;
+  color:gainsboro;
 }
 
-.logo {
-  height: 1em;
-  margin-left: 0.5rem;
+.inputContainer {
+  margin: 20px auto 0px;
+  width: 80%;
+  text-align: center;
+}
+.input {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 32px;
+  width: 100%;
+  outline: none;
+}
+.error {
+  color: red;
+  font-size: 18px;
+  min-height: 21px;
+  margin: 24px 0px;
+}
+.button {
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+  display: inline-block;
+  padding: 16px;
+  margin: 4px auto 12px;
+  color: #202336;
+  background-color: #fa931e;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  -webkit-transition: all 0.2s ease, -webkit-transform 0.1s ease, transform 0.1s ease;
+  -moz-transition: all 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease, -ms-transform 0.1s ease, -webkit-transform 0.1s ease, transform 0.1s ease;
 }
 
-@media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
+.button:active {
+  -webkit-transform: scale(0.96);
+  -ms-transform: scale(0.96);
+  transform: scale(0.96);
+  border: none;
+}
+.button:focus {
+  outline: none;
+}
+.button:hover {
+  background-color: #fda32b;
+}
+
+.loadingRing {
+  display: inline-block;
+  position: relative;
+  width: 24px;
+  height: 16px;
+  top: -2px;
+}
+.loadingRing div {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 4px solid #202336;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #202336 transparent transparent transparent;
+}
+.loadingRing div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.loadingRing div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.loadingRing div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
