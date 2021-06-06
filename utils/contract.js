@@ -1,5 +1,9 @@
 const contract = {
-  address: "0x32210faB2aF4E19290b5eBC828Faa9d6184D7156",
+  address: {
+    ropsten: process.env.CONTRACT_ADDRESS_ROPSTEN,
+    kovan: process.env.CONTRACT_ADDRESS_KOVAN,
+    rinkeby: process.env.CONTRACT_ADDRESS_RINKEBY,
+  },
   abi: [
     {
       "inputs": [
