@@ -13,12 +13,13 @@
   color: white;
 }
 
-.navbar { 
+.navbar {
   width: 100%;
   padding: 24px;
   display: flex;
   justify-content: space-between;
 }
+
 .navbar a {
   color: #fda32b;
   display: flex;
@@ -28,6 +29,7 @@
   font-size: 18px;
   font-weight: bold;
 }
+
 .auth {
   display: flex;
   align-items: center;
@@ -36,6 +38,7 @@
   color: gainsboro;
   cursor: pointer;
 }
+
 .authButton {
   display: flex;
   flex-direction: row;
@@ -50,6 +53,7 @@
   -moz-transition: all 0.2s ease, transform 0.1s ease;
   transition: all 0.2s ease, -ms-transform 0.1s ease, -webkit-transform 0.1s ease, transform 0.1s ease;
 }
+
 .authButton:hover {
   background-color: rgb(48, 52, 59);
 }
@@ -69,19 +73,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
 .footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
   color: gainsboro;
   text-shadow: 2px 3px 0 black;
 }
+
 .title span {
   color: white;
 }
+
 .title {
   margin: 0;
   line-height: 1.15;
@@ -89,8 +92,7 @@
   color: #fda32b;
 }
 
-.title,
-.description {
+.title, .description {
   text-align: center;
 }
 
@@ -98,46 +100,86 @@
   line-height: 1.5;
   font-size: 1.5rem;
 }
+
 .disclaimer {
   line-height: 1.5;
   font-size: 0.9rem;
   font-style: italic;
-  color:gainsboro;
+  color: gainsboro;
 }
 
 .inputContainer {
-  margin: 20px auto 0px;
+  display: flex;
+  margin-top: 16px;
   width: 80%;
   text-align: center;
+  background: white;
+  border-radius: 8px;
+  padding-right: 12px;
+  overflow: hidden;
 }
-.input {
+
+.inputContainer input {
   padding: 12px;
   border-radius: 8px;
   font-size: 32px;
   width: 100%;
   outline: none;
+  border: none;
+  border-radius: 0px;
+  border-right: 1px solid #21202e15;
 }
+
+.inputContainer select {
+  border: none;
+  outline: none;
+  padding: 0px 12px;
+  padding-left: 0px;
+  font-size: 16px;
+  color: rgb(65, 65, 65);
+}
+.network {
+  width: 8px;
+  height: 8px;
+  align-self: center;
+  border-radius: 50%;
+  margin: 0px 4px 0px 12px;
+}
+.ropsten {
+  background-color: rgb(240, 95, 95);
+}
+.kovan {
+  background-color: rgb(172, 87, 241);
+}
+.rinkeby {
+  background-color: rgb(251, 195, 92);
+}
+
 .message {
   font-size: 18px;
   min-height: 21px;
   margin: 24px 0px;
 }
+
 .error {
   color: red;
 }
+
 .success {
   color: #54C147;
 }
+
 .success a {
   text-decoration: underline;
 }
+
 .button {
   cursor: pointer;
   border: 0;
   text-align: center;
   display: inline-block;
   padding: 16px;
-  margin: 4px auto 12px;
+  margin: 12px auto;
   color: #202336;
   background-color: #fa931e;
   border-radius: 8px;
@@ -155,9 +197,11 @@
   transform: scale(0.96);
   border: none;
 }
+
 .button:focus {
   outline: none;
 }
+
 .button:hover {
   background-color: #fda32b;
 }
@@ -169,6 +213,7 @@
   height: 16px;
   top: -2px;
 }
+
 .loadingRing div {
   position: absolute;
   width: 24px;
@@ -178,15 +223,19 @@
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   border-color: #202336 transparent transparent transparent;
 }
+
 .loadingRing div:nth-child(1) {
   animation-delay: -0.45s;
 }
+
 .loadingRing div:nth-child(2) {
   animation-delay: -0.3s;
 }
+
 .loadingRing div:nth-child(3) {
   animation-delay: -0.15s;
 }
+
 @keyframes lds-ring {
   0% {
     transform: rotate(0deg);
