@@ -196,7 +196,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Open Shiba
+          Open Shiba Foundation
         </a>
       </footer>
     </div>
