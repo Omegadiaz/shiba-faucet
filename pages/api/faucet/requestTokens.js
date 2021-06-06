@@ -10,9 +10,6 @@ import { getSession } from 'next-auth/client'
 // SHIB contract
 const { abi: CONTRACT_ABI, address: CONTRACT_ADDRESS } = contract;
 
-// Infura HttpProvider Endpoint
-const web3js = new web3(new web3.providers.HttpProvider("https://kovan.infura.io/v3/d6eb601abc614d0aa3177301e2131633"));
-
 // Wallet
 const FROM_ADDRESS = process.env.MM_PRIVATE_ADDRESS;
 const FROM_KEY = Buffer.from(process.env.MM_PRIVATE_KEY, 'hex');
@@ -30,11 +27,15 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Please, authenticate" });
     }
 
-    const { body: { address }, method } = req;
+    const { body: { address, network }, method } = req;
     if(method !== "POST"){
       return res.status(405).json({ message: `Method ${method} Not Allowed` });
     }
 
+    // Validate if netowrk is sent
+    if (["ropsten", "kovan", "rinkeby"].indexOf(network) === -1) {
+      return res.status(401).json({ message: "Network required" });
+    }
     // Validate if address is sent
     if (!address) {
       return res.status(401).json({ message: "Address required" });
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
     // Get the latest fund of this addres
     const transactions = await db
       .collection("transactions")
-      .find({ address })
+      .find({ address, network })
       .sort({ _id: -1 })
       .limit(1)
       .toArray();
@@ -70,9 +71,12 @@ export default async function handler(req, res) {
         });
       }
     }
-
+    
+    // Infura HttpProvider Endpoint
+    const web3js = new web3(new web3.providers.HttpProvider(`https://${network}.infura.io/v3/d6eb601abc614d0aa3177301e2131633`));
+    
     // Declaring the Contract
-    const contract = new web3js.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+    const contract = new web3js.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS[network]);
 
 
     web3js.eth.getTransactionCount(FROM_ADDRESS)
@@ -83,18 +87,18 @@ export default async function handler(req, res) {
         // Transfer 100m SHIB
         const amount = web3js.utils.toWei("1000000", "ether");
 
-        // Declare Kovan Network
-        const common = new Common({ chain: 'kovan' })
+        // Declare Testnet
+        const common = new Common({ chain: network });
 
         // Declare transaction before signin
         const tx = Transaction.fromTxData({
           nonce: web3js.utils.toHex(count),
           gasPrice: web3js.utils.toHex(20 * 1e9),
           gasLimit: web3js.utils.toHex(210000),
-          to: CONTRACT_ADDRESS,
+          to: CONTRACT_ADDRESS[network],
           value: '0x00',
           data: contract.methods.transfer(address, amount).encodeABI(),
-        }, { common })
+        }, { common });
 
         // Sign transaction
         const signedTx = tx.sign(FROM_KEY);
@@ -103,7 +107,7 @@ export default async function handler(req, res) {
         web3js.eth.sendSignedTransaction('0x' + signedTx.serialize().toString('hex'))
           .on('transactionHash', function (transactionHash) {
             // Insert the new transaction into the DB
-            db.collection('transactions').insertOne({ address, transactionHash }, function (error, response) {
+            db.collection('transactions').insertOne({ address, transactionHash, network }, function (error, response) {
               if (error) {
                 console.log('requestTokens.js | Error', 'Could not save to DB');
               } else {
