@@ -1,11 +1,11 @@
 {
-  "name": "shib-faucet-kovan",
+  "name": "shiba-faucet",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
-    "build": "next build",
-    "start": "next start"
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "npm run build",
+    "build": "next build"
   },
   "dependencies": {
     "@ethereumjs/common": "^2.3.0",
