@@ -171,8 +171,16 @@ export default function Home() {
           )}
         </button>
         <p className={styles.disclaimer}>
-          The faucet is running invisible reCaptcha protection against bots.
+          {'Token address '}
+          <a
+            href={`https://${network}.etherscan.io/token/${tokenAddress[network]}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {tokenAddress[network]}
+          </a>
         </p>
+        
         <ReCAPTCHA
           ref={recaptchaRef}
           size="invisible"
@@ -183,14 +191,6 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href={`https://${network}.etherscan.io/token/${tokenAddress[network]}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Token address {tokenAddress[network]}
-        </a>
-        <div>•</div>
         <a
           href="https://www.openshiba.org/"
           target="_blank"
