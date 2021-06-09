@@ -12,6 +12,10 @@ const tokenAddress = {
   rinkeby: "0x34e12283f70b332a14e91a00a99396d41488b23f",
 }
 
+const imageLoader = ({ src, width, quality }) => {
+  return `https://faucet.openshiba.org/${src}?w=${width}&q=${quality || 75}`
+}
+
 export default function Home() {
   const [session] = useSession();
   const [network, setNetwork] = useState('ropsten');
@@ -100,6 +104,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
+            loader={imageLoader}
             alt=''
             src="/shib_logo_header.png"
             width="30"
@@ -125,6 +130,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <Image
+          loader={imageLoader}
           alt=""
           src="/shib_astronaut.png"
           width="260"
