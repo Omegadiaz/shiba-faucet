@@ -1,11 +1,11 @@
 import web3 from 'web3';
 import Common from '@ethereumjs/common';
 import { Transaction } from '@ethereumjs/tx';
-import { connectToDatabase } from '../../../utils/mongodb';
-import { ObjectId } from 'mongodb';
+import { connectToDatabase, ObjectId } from '../../../utils/mongodb';
 import contract from '../../../utils/contract';
 import rateLimit from '../../../utils/rateLimit';
 import { getSession } from 'next-auth/client'
+import DBTransaction from '../../../models/transaction';
 
 // SHIB contract
 const { abi: CONTRACT_ABI, address: CONTRACT_ADDRESS } = contract;
@@ -47,15 +47,10 @@ export default async function handler(req, res) {
     }
 
     // Connect to MongoDB database
-    const { db } = await connectToDatabase()
+    await connectToDatabase()
 
     // Get the latest fund of this addres
-    const transactions = await db
-      .collection("transactions")
-      .find({ address, network })
-      .sort({ _id: -1 })
-      .limit(1)
-      .toArray();
+    const transactions = await DBTransaction.find({ address, network }).sort({ _id: -1 }).limit(1);
 
     // console.log('TRANSACTIONS DB', transactions)
     // Check if the user has already been given funds in the last 24 hours
@@ -73,7 +68,7 @@ export default async function handler(req, res) {
     }
     
     // Infura HttpProvider Endpoint
-    const web3js = new web3(new web3.providers.HttpProvider(`https://${network}.infura.io/v3/d6eb601abc614d0aa3177301e2131633`));
+    const web3js = new web3(new web3.providers.HttpProvider(`https://${network}.infura.io/v3/${process.env.INFURA_KEY}`));
     
     // Declaring the Contract
     const contract = new web3js.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS[network]);
@@ -107,11 +102,11 @@ export default async function handler(req, res) {
         web3js.eth.sendSignedTransaction('0x' + signedTx.serialize().toString('hex'))
           .on('transactionHash', function (transactionHash) {
             // Insert the new transaction into the DB
-            db.collection('transactions').insertOne({ address, transactionHash, network }, function (error, response) {
+            DBTransaction.create({ address, transactionHash, network }, function (error, newTransaction) {
               if (error) {
                 console.log('requestTokens.js | Error', 'Could not save to DB');
               } else {
-                console.log('requestTokens.js | Inserted', response.ops[0]);
+                console.log('requestTokens.js | Inserted', newTransaction);
               }
               res.status(200).json({ address, transactionHash });
             });
