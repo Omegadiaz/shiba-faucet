@@ -1,5 +1,4 @@
 module.exports = {
-  target: "serverless",
   webpack: (config, { isServer, webpack }) => {
     if (!isServer) {
       config.node = {
@@ -10,7 +9,7 @@ module.exports = {
         child_process: 'empty',
       };
 
-      config.plugins.push(new webpack.IgnorePlugin(/^(mongodb-client-encryption)$/));
+      config.plugins.push(new webpack.IgnorePlugin(/^(mongodb-client-encryption|electron)$/));
     }
     return config;
   },
