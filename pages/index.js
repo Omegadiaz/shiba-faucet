@@ -1,5 +1,6 @@
 import { createRef, useState } from 'react';
 import Head from 'next/head'
+import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { signIn, signOut, useSession } from 'next-auth/client'
 import ReCAPTCHA from "react-google-recaptcha";
@@ -98,7 +99,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
+          <Image
             alt=''
             src="/shib_logo_header.png"
             width="30"
@@ -123,7 +124,7 @@ export default function Home() {
       </div>
 
       <main className={styles.main}>
-        <img
+        <Image
           alt=""
           src="/shib_astronaut.png"
           width="260"
