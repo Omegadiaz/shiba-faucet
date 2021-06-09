@@ -1,6 +1,5 @@
 import { createRef, useState } from 'react';
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { signIn, signOut, useSession } from 'next-auth/client'
 import ReCAPTCHA from "react-google-recaptcha";
@@ -10,10 +9,6 @@ const tokenAddress = {
   ropsten: "0x34e12283f70b332a14e91a00a99396d41488b23f",
   kovan: "0x32210fab2af4e19290b5ebc828faa9d6184d7156",
   rinkeby: "0x34e12283f70b332a14e91a00a99396d41488b23f",
-}
-
-const imageLoader = ({ src, width, quality }) => {
-  return `https://faucet.openshiba.org/${src}?w=${width}&q=${quality || 75}`
 }
 
 export default function Home() {
@@ -103,8 +98,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            loader={imageLoader}
+          <img
             alt=''
             src="/shib_logo_header.png"
             width="30"
@@ -129,8 +123,7 @@ export default function Home() {
       </div>
 
       <main className={styles.main}>
-        <Image
-          loader={imageLoader}
+        <img
           alt=""
           src="/shib_astronaut.png"
           width="260"
