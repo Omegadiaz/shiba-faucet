@@ -11,7 +11,6 @@
     "@ethereumjs/common": "^2.3.0",
     "@ethereumjs/tx": "^3.2.0",
     "express-rate-limit": "^5.2.6",
-    "mongodb-client-encryption": "^1.2.4",
     "mongoose": "^5.12.13",
     "next": "10.2.3",
     "next-auth": "^3.25.0",
