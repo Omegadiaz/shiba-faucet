@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "start": "next start -p $PORT",
-    "heroku-postbuild": "npm run build",
-    "build": "next build"
+    "build": "next build",
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@ethereumjs/common": "^2.3.0",
