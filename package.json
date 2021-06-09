@@ -6,8 +6,7 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p $PORT",
-    "export": "next export",
-    "deploy": "CI= npm run build && npm run export"
+    "export": "next export"
   },
   "dependencies": {
     "@ethereumjs/common": "^2.3.0",
