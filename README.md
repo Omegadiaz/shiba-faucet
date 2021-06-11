@@ -7,7 +7,7 @@ A faucet web application for SHIBA Token (SHIB) on Ropsten, Kovan and Rinkeby Te
 
 The main purpose of this project get fast SHIB tokens for testing purposes. The intended use case is providing some test SHIB to your wallet in order to help developers create amazing dApp with SHIB. It's not intended for wide audience use.
 
-This faucet handles authentication and rate limiting per IP and Wallet address.
+This faucet handles rate limiting per IP and Wallet address.
 
 ## Getting Started
 
