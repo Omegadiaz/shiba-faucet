@@ -1,14 +1,12 @@
 import { createRef, useState } from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import { signIn, signOut, useSession } from 'next-auth/client'
 import ReCAPTCHA from "react-google-recaptcha";
 import web3Utils from 'web3-utils';
 import tokenAddress from '../utils/tokenAddress';
 
 
 export default function Home() {
-  const [session] = useSession();
   const [network, setNetwork] = useState('ropsten');
   const [address, setAddress] = useState('');
   const [error, setError] = useState('');
@@ -25,9 +23,6 @@ export default function Home() {
 
   const handleSubmit = () => {
     if (loading) return;
-    if (!session) {
-      return setError('Please, log in to request SHIB');
-    }
     if (!tokenAddress[network]) {
       return setError('Please, select a testnet network');
     }
@@ -103,19 +98,6 @@ export default function Home() {
           />
           SHIBA TOKEN | Faucet
         </a>
-        {session ? (
-          <div className={styles.auth}>
-            <div style={{ width: 9, height: 9, borderRadius: "50%", backgroundColor: "#54C147" }} />
-            <div>Connected as {session.user.name}</div>
-            <div onClick={() => signOut()} className={styles.authButton}>Log out</div>
-          </div>
-        ) : (
-          <div className={styles.auth}>
-            <div style={{ width: 9, height: 9, borderRadius: "50%", backgroundColor: "orange" }} />
-            <div>Please, authenticate</div>
-            <div onClick={() => signIn('github')} className={styles.authButton}>Log in</div>
-          </div>
-        )}
       </div>
 
       <main className={styles.main}>

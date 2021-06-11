@@ -3,7 +3,6 @@ import Common from '@ethereumjs/common';
 import { Transaction } from '@ethereumjs/tx';
 import contract from '../../../utils/contract';
 import rateLimit from '../../../utils/rateLimit';
-import { getSession } from 'next-auth/client'
 import tokenAddress from '../../../utils/tokenAddress';
 
 // SHIB contract
@@ -13,18 +12,11 @@ const { abi: CONTRACT_ABI, address: CONTRACT_ADDRESS } = contract;
 const FROM_ADDRESS = process.env.MM_PRIVATE_ADDRESS;
 const FROM_KEY = Buffer.from(process.env.MM_PRIVATE_KEY, 'hex');
 
-
 // Requests to /api/faucet/requestTokens
 export default async function handler(req, res) {
   try {
     // Express Rate Limit middleware to avoid many petitions from same IP
     await rateLimit(req, res);
-
-    // Require each request to have a session;
-    const session = await getSession({ req });
-    if (!session) {
-      return res.status(401).json({ message: "Please, authenticate" });
-    }
 
     const { body: { address, network }, method } = req;
     if(method !== "POST"){
@@ -33,7 +25,7 @@ export default async function handler(req, res) {
 
     // Validate if netowrk is sent
     if (["ropsten", "kovan", "rinkeby"].indexOf(network) === -1) {
-      return res.status(401).json({ message: "Network required" });
+      return res.status(401).json({ message: "Invalid network" });
     }
     // Validate if address is sent
     if (!address) {
