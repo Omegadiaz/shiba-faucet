@@ -1,11 +1,10 @@
 import web3 from 'web3';
 import Common from '@ethereumjs/common';
 import { Transaction } from '@ethereumjs/tx';
-import { connectToDatabase, ObjectId } from '../../../utils/mongodb';
 import contract from '../../../utils/contract';
 import rateLimit from '../../../utils/rateLimit';
 import { getSession } from 'next-auth/client'
-import DBTransaction from '../../../models/transaction';
+import tokenAddress from '../../../utils/tokenAddress';
 
 // SHIB contract
 const { abi: CONTRACT_ABI, address: CONTRACT_ADDRESS } = contract;
@@ -46,18 +45,27 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "Invalid address" });
     }
 
-    // Connect to MongoDB database
-    await connectToDatabase()
+    // Get the latest fund of this address
+    const apiRes = await fetch(`https://api-${network}.etherscan.io/api?module=account&action=tokentx&contractaddress=${tokenAddress[network]}&address=${address}&page=1&offset=100&sort=desc&apikey=${process.env.ETHERSCAN_API_KEY}`)
+    
+    if (!apiRes.ok) {// Check if fetch failed
+      const errorResData = await apiRes.json();
+      console.log('requestTokens.js | Error Etherscan Api', errorResData.message);
+      throw new Error(errorResData.message);
+    }
+    
+    const data = await apiRes.json();
+    if(!Array.isArray(data.result)){ // Check if fetch response has valid information
+      return res.status(400).json({
+        message: data.message
+      });
+    }
 
-    // Get the latest fund of this addres
-    const transactions = await DBTransaction.find({ address, network }).sort({ _id: -1 }).limit(1);
-
-    // console.log('TRANSACTIONS DB', transactions)
     // Check if the user has already been given funds in the last 24 hours
-    if (transactions.length > 0) {
+    if (data.result.length > 0) {
       const currentDate = new Date();
       const oneDay = 24 * 60 * 60 * 1000;
-      const createdAt = ObjectId(transactions[0]._id).getTimestamp();
+      const createdAt = data.result[0].timeStamp * 1000;
 
       // At least 24 has passed since the latests transaction of this address
       if ((currentDate - createdAt) <= oneDay) {
@@ -101,21 +109,7 @@ export default async function handler(req, res) {
         // Send signed transaction to Blockchain
         web3js.eth.sendSignedTransaction('0x' + signedTx.serialize().toString('hex'))
           .on('transactionHash', function (transactionHash) {
-            // Insert the new transaction into the DB
-            DBTransaction.create({ address, transactionHash, network }, function (error, newTransaction) {
-              if (error) {
-                console.log('requestTokens.js | Error', 'Could not save to DB');
-              } else {
-                console.log('requestTokens.js | Inserted', newTransaction);
-              }
-              res.status(200).json({ address, transactionHash });
-            });
-          });
-
-        // Get faucet balance
-        contract.methods.balanceOf(FROM_ADDRESS).call()
-          .then(function (balance) {
-            console.log('requestTokens.js | New balance', balance);
+            res.status(200).json({ address, transactionHash });
           });
 
       });
