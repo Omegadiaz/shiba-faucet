@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "export": "next export"
@@ -11,7 +11,7 @@
   "dependencies": {
     "@ethereumjs/common": "^2.3.0",
     "@ethereumjs/tx": "^3.2.0",
-    "express-rate-limit": "^5.2.6",
+    "lambda-rate-limiter": "^3.0.0",
     "next": "10.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",

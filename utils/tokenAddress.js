@@ -4,4 +4,4 @@ const tokenAddress = {
   rinkeby: "0x34e12283f70b332a14e91a00a99396d41488b23f",
 }
 
-export default tokenAddress;
+module.exports = tokenAddress;

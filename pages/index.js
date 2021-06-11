@@ -51,7 +51,7 @@ export default function Home() {
     recaptchaRef.current.reset();
 
     try {
-      const res = await fetch('/api/faucet/requestTokens', {
+      const res = await fetch('/.netlify/functions/requestTokens', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
