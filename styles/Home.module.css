@@ -58,6 +58,7 @@
 }
 
 .main {
+  width: 100%;
   padding: 5rem 0;
   flex: 1;
   display: flex;
@@ -105,28 +106,37 @@
   font-size: 1.1rem;
   font-style: italic;
   color: gainsboro;
+  width: 100%;
+  text-align: center;
+  padding: 0px 24px;
+}
+.disclaimer a{
+  width: 100%;
+  word-wrap: break-word
 }
 
 .inputContainer {
   display: flex;
   margin-top: 16px;
-  width: 80%;
+  width: 100%;
+  max-width: 630px;
   text-align: center;
   background: white;
   border-radius: 8px;
-  padding-right: 12px;
+  padding-right: 4px;
   overflow: hidden;
 }
 
 .inputContainer input {
   padding: 12px;
   border-radius: 8px;
-  font-size: 24px;
+  font-size: 1.2rem;
   width: 100%;
   outline: none;
   border: none;
   border-radius: 0px;
   border-right: 1px solid #21202e15;
+  padding-right: 0px;
 }
 
 .inputContainer select {
@@ -136,13 +146,18 @@
   padding-left: 0px;
   font-size: 16px;
   color: rgb(65, 65, 65);
+  background-color: white;
+}
+
+.networkContainer {
+  display: flex;
 }
 .network {
   width: 8px;
   height: 8px;
   align-self: center;
   border-radius: 50%;
-  margin: 0px 4px 0px 12px;
+  margin: 0px 4px 0px 8px;
 }
 .ropsten {
   background-color: rgb(240, 95, 95);

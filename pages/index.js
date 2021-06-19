@@ -118,16 +118,18 @@ export default function Home() {
         <div className={styles.inputContainer}>
           <input
             type="text"
-            placeholder="Your testnet address"
+            placeholder="Your testnet address..."
             value={address}
             onChange={handleAddress}
           />
-          <div className={styles.network + " " + styles[network]}/>
-          <select value={network} onChange={e => setNetwork(e.target.value)}>
-            <option className={styles.ropsten} value="ropsten">Ropsten</option>
-            <option className={styles.kovan} value="kovan">Kovan</option>
-            <option className={styles.rinkeby} value="rinkeby">Rinkeby</option>
-          </select>
+          <div className={styles.networkContainer}>
+            <div className={styles.network + " " + styles[network]}/>
+            <select value={network} onChange={e => setNetwork(e.target.value)}>
+              <option className={styles.ropsten} value="ropsten">Ropsten</option>
+              <option className={styles.kovan} value="kovan">Kovan</option>
+              <option className={styles.rinkeby} value="rinkeby">Rinkeby</option>
+            </select>
+          </div>
         </div>
         <div className={styles.message}>
           {error ? (
